@@ -30,7 +30,7 @@ async def search_analyses_endpoint(
     topic: str, db: Database = DatabaseDep, response_model=List[AnalysisResult]
 ):
     try:
-        results = db.search_analyses(topic)
+        results = db.search_analyses(topic.lower())
         return results
     except Exception as e:
         raise HTTPException(

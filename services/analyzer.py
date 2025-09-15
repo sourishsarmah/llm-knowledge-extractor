@@ -47,7 +47,7 @@ class LLMAnalyzer:
             analysis_result = AnalysisResult(
                 summary=response.summary,
                 title=response.title,
-                topics=response.topics,
+                topics=[topic.lower() for topic in response.topics],
                 sentiment=response.sentiment,
                 keywords=self.extract_keywords(text),
                 text=text,
