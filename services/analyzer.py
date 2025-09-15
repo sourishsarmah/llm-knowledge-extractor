@@ -1,7 +1,7 @@
 from langchain_openai import ChatOpenAI
 from langchain.schema import HumanMessage
 from config import OPENAI_API_KEY
-from models import AnalysisResult
+from models import LLMAnalysisResult, AnalysisResult
 
 
 class LLMAnalyzer:
@@ -24,15 +24,27 @@ class LLMAnalyzer:
         {{
             "summary": "summary of the text",
             "title": "title of the text",
-            "topics": "topics of the text",
-            "sentiment": "sentiment of the text",
+            "topics": ["topic1", "topic2", "topic3"],
+            "sentiment": "positive/neutral/negative",
         }}
         """
-        structured_llm = self.llm.with_structured_output(AnalysisResult)
-        response = structured_llm.invoke([HumanMessage(content=prompt)])
-        response.keywords = self.extract_keywords(text)
+        structured_llm = self.llm.with_structured_output(LLMAnalysisResult)
 
-        return response
+        try:
+            response = structured_llm.invoke([HumanMessage(content=prompt)])
+
+            analysis_result = AnalysisResult(
+                summary=response.summary,
+                title=response.title,
+                topics=response.topics,
+                sentiment=response.sentiment,
+                keywords=self.extract_keywords(text),
+                text=text,
+            )
+
+            return analysis_result
+        except Exception as e:
+            raise Exception(f"Failed to analyze text: {str(e)}")
 
     def extract_keywords(self, text: str) -> list:
         return []

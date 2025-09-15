@@ -22,3 +22,4 @@ class LLMAnalysisResult(BaseModel):
 
 class AnalysisResult(LLMAnalysisResult):
     keywords: List[str]
+    text: str
