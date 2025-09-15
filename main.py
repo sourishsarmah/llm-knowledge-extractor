@@ -5,7 +5,6 @@ from services.analyzer import LLMAnalyzer
 from db.database import Database
 from models import TextInput, AnalysisResult
 from dependencies import DatabaseDep
-import nltk
 
 app = FastAPI(title="LLM Knowledge Extractor", version="1.0.0")
 
@@ -29,6 +28,8 @@ async def analyze_text_endpoint(input_data: TextInput, db: Database = DatabaseDe
 async def search_analyses_endpoint(
     topic: str, db: Database = DatabaseDep, response_model=List[AnalysisResult]
 ):
+    if not topic.strip():
+        raise HTTPException(status_code=400, detail="Topic text cannot be empty.")
     try:
         results = db.search_analyses(topic.lower())
         return results
