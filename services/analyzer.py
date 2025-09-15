@@ -2,12 +2,23 @@ from langchain_openai import ChatOpenAI
 from langchain.schema import HumanMessage
 from config import OPENAI_API_KEY
 from models import LLMAnalysisResult, AnalysisResult
+from collections import Counter
+import nltk
+from nltk.tokenize import word_tokenize
+from nltk.tag import pos_tag
+from nltk.corpus import stopwords
 
 
 class LLMAnalyzer:
 
     def __init__(self):
-        self.llm = ChatOpenAI(api_key=OPENAI_API_KEY, model="gpt-3.5-turbo")
+        self.llm = ChatOpenAI(api_key=OPENAI_API_KEY, model="gpt-4o-mini")
+        # Download required NLTK data
+        nltk.download("punkt")
+        nltk.download("punkt_tab")
+        nltk.download("averaged_perceptron_tagger")
+        nltk.download("averaged_perceptron_tagger_eng")
+        nltk.download("stopwords")
 
     def analyze_text(self, text: str):
         # Generate summary
@@ -46,5 +57,19 @@ class LLMAnalyzer:
         except Exception as e:
             raise Exception(f"Failed to analyze text: {str(e)}")
 
-    def extract_keywords(self, text: str) -> list:
-        return []
+    def extract_keywords(self, text: str, top_k: int = 3) -> list:
+        """
+        Extract the 3 most frequent nouns from the text using NLTK.
+        """
+        # Tokenize the text
+        tokens = word_tokenize(text.lower())
+        pos_tags = pos_tag(tokens)
+        nouns = [word for word, pos in pos_tags if pos.startswith("NN")]
+        stop_words = set(stopwords.words("english"))
+        filtered_nouns = [
+            noun for noun in nouns if noun not in stop_words and len(noun) > 2
+        ]
+        noun_counts = Counter(filtered_nouns)
+        top_nouns = [noun for noun, count in noun_counts.most_common(top_k)]
+
+        return top_nouns

@@ -5,6 +5,7 @@ from services.analyzer import LLMAnalyzer
 from db.database import Database
 from models import TextInput, AnalysisResult
 from dependencies import DatabaseDep
+import nltk
 
 app = FastAPI(title="LLM Knowledge Extractor", version="1.0.0")
 
