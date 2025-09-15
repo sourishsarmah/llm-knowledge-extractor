@@ -163,3 +163,14 @@ curl "http://localhost:8000/search?topic=healthcare"
   "detail": "An error occurred during analysis: <error_message>"
 }
 ```
+
+## Design Choices:
+
+1. Used Python with FastAPI for faster setup.
+2. Used Supabase for Database for minimal infra setup, without need for local database setup.
+3. Used LangChain framework for better structured code and flexibility to change minimal code for better model switching.
+
+## Trade Offs:
+
+1. Lack of Logs.
+2. Missing of validations in few spots. Mainly at LLM model calls - will probably like to add a rate limit or token count using tiktoken.
