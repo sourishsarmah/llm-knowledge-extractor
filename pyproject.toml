@@ -2,6 +2,7 @@
 name = "llm-knowledge-extractor"
 version = "0.1.0"
 description = ""
+package-mode = false
 authors = [
     {name = "Sourish Sarmah",email = "sourishsarmah@gmail.com"}
 ]

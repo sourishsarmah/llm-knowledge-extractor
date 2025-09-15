@@ -13,12 +13,47 @@ A FastAPI application that uses LangChain and OpenAI to analyze unstructured tex
 
 ### Prerequisites
 
-- Python 3.10 or higher
-- Poetry (for dependency management)
+- Docker and Docker (recommended)
+- OR Python 3.10+ with Poetry
 - OpenAI API key
 - Supabase project
 
-### Installation
+### Option 1: Docker Setup (Recommended)
+
+1. **Clone the repository**
+
+   ```bash
+   git clone <repository-url>
+   cd llm-knowledge-extractor
+   ```
+
+2. **Set up environment variables**
+   Create a `.env` file in the root directory with the following variables:
+
+   ```env
+   OPENAI_API_KEY=your_openai_api_key_here
+   SUPABASE_URL=your_supabase_url_here
+   SUPABASE_KEY=your_supabase_anon_key_here
+   ```
+
+3. **Set up the database**
+
+   - Create a new Supabase project
+   - Run the migration script in `db/migrations/001_InitialMigration.sql` to create the `analyses` table
+
+4. **Build and run with Docker**
+
+   ```bash
+   # Build the Docker image
+   docker build -t llm-knowledge-extractor .
+
+   # Run the container
+   docker run -p 8000:8000 --env-file .env llm-knowledge-extractor
+   ```
+
+   The API will be available at `http://localhost:8000`
+
+### Option 2: Local Development Setup
 
 1. **Clone the repository**
 
@@ -30,7 +65,7 @@ A FastAPI application that uses LangChain and OpenAI to analyze unstructured tex
 2. **Install dependencies using Poetry**
 
    ```bash
-   poetry install
+   poetry install --no-root
    ```
 
 3. **Set up environment variables**
