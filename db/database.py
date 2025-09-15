@@ -15,11 +15,10 @@ class Database:
 
     def search_analyses(self, topic: str):
         try:
-            # Search in both topics and keywords arrays using @> operator
             result = (
                 self.supabase.table("analyses")
                 .select("*")
-                .contains("topics", [topic])
+                .or_(f"topics.cs.{{{topic}}},keywords.cs.{{{topic}}}")
                 .execute()
             )
             return result.data
